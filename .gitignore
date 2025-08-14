@@ -1,0 +1,19 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Build output
+bin/
+target/
+out/
+build/
+
+# OS
+.DS_Store
+
+# Java
+*.log
+
+# Netlify local state
+.netlify/
