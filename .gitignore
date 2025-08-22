@@ -17,3 +17,7 @@ build/
 
 # Netlify local state
 .netlify/
+node_modules/
+**/node_modules/
+dist/
+.DS_Store
