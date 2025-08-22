@@ -1,0 +1,84 @@
+import {
+  Box, Stack, TextField, FormControl, InputLabel, Select, MenuItem,
+  FormHelperText, FormLabel, RadioGroup, FormControlLabel, Radio, Button
+} from "@mui/material";
+
+const TC_OPTIONS = ["2", "3", "4", "5"];
+const TYPES = ["flexible", "composite", "rigid"];
+const FC2_OPTIONS = [
+  "SUBBASE_ONLY_UNBOUND","SUBBASE_ONLY_BOUND",
+  "SUBBASE_ON_CAP_UNBOUND","SUBBASE_ON_CAP_BOUND",
+  "SUBBASE_ON_BOUND_CAP_UNBOUND","SUBBASE_ON_BOUND_CAP_BOUND",
+];
+
+export default function CalcForm({
+  form, fieldErrors, touched, hasErrors,
+  onChange, onBlur, onSubmit,
+}) {
+  return (
+    <Box component="form" noValidate onSubmit={onSubmit}>
+      <Stack spacing={2}>
+        <TextField
+          id="cbr" name="cbr" label="Subgrade CBR (%)" type="number"
+          inputProps={{ step: 0.1, min: 0.5, max: 30 }} required
+          value={form.cbr} onChange={onChange} onBlur={onBlur}
+          error={!!fieldErrors.cbr && (touched.cbr || form.cbr !== "")}
+          helperText={(touched.cbr || form.cbr !== "") ? fieldErrors.cbr : ""}
+          fullWidth
+        />
+
+        <FormControl fullWidth required
+          error={!!fieldErrors.trafficCategory && (touched.trafficCategory || form.trafficCategory !== "")}>
+          <InputLabel id="tc-label">Traffic category</InputLabel>
+          <Select
+            labelId="tc-label" id="trafficCategory" name="trafficCategory"
+            label="Traffic category" value={form.trafficCategory}
+            onChange={onChange} onBlur={onBlur}
+          >
+            <MenuItem value="" disabled>Choose…</MenuItem>
+            {TC_OPTIONS.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
+          </Select>
+          <FormHelperText>
+            {(touched.trafficCategory || form.trafficCategory !== "") ? fieldErrors.trafficCategory : "Pick DMRB traffic category."}
+          </FormHelperText>
+        </FormControl>
+
+        <TextField
+          id="designLife" name="designLife" label="Design life (years)" type="number"
+          inputProps={{ min: 10, max: 60 }} required
+          value={form.designLife} onChange={onChange} onBlur={onBlur}
+          error={!!fieldErrors.designLife && (touched.designLife || form.designLife !== "")}
+          helperText={(touched.designLife || form.designLife !== "") ? fieldErrors.designLife : ""}
+          fullWidth
+        />
+
+        <FormControl component="fieldset"
+          error={!!fieldErrors.pavementType && (touched.pavementType || form.pavementType !== "")}>
+          <FormLabel component="legend">Pavement type</FormLabel>
+          <RadioGroup name="pavementType" value={form.pavementType} onChange={onChange} onBlur={onBlur}>
+            {TYPES.map(t => <FormControlLabel key={t} value={t} control={<Radio />} label={t.charAt(0).toUpperCase()+t.slice(1)} />)}
+          </RadioGroup>
+          {!!fieldErrors.pavementType && (touched.pavementType || form.pavementType !== "") &&
+            <FormHelperText>{fieldErrors.pavementType}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth required
+          error={!!fieldErrors.fc2Option && (touched.fc2Option || form.fc2Option !== "")}>
+          <InputLabel id="fc2-label">Foundation option (fc2Option)</InputLabel>
+          <Select
+            labelId="fc2-label" id="fc2Option" name="fc2Option"
+            label="Foundation option (fc2Option)"
+            value={form.fc2Option} onChange={onChange} onBlur={onBlur}
+          >
+            {FC2_OPTIONS.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
+          </Select>
+          <FormHelperText>
+            {(touched.fc2Option || form.fc2Option !== "") ? fieldErrors.fc2Option : "Choose foundation configuration."}
+          </FormHelperText>
+        </FormControl>
+
+        <Button type="submit" variant="contained" disabled={hasErrors}>Calculate</Button>
+      </Stack>
+    </Box>
+  );
+}
