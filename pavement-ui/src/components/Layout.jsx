@@ -38,19 +38,22 @@ export default function Layout() {
             <Divider orientation="vertical" flexItem sx={{ mx: 1, opacity: 0.4 }} />
 
             <Button
-              size="small"
-              variant={theme === "modern" ? "contained" : "outlined"}
-              onClick={() => applyTheme("modern")}
-            >
-              Modern
-            </Button>
-            <Button
-              size="small"
-              variant={theme === "retro" ? "contained" : "outlined"}
-              onClick={() => applyTheme("retro")}
-            >
-              Retro
-            </Button>
+  size="small"
+  color="inherit"
+  variant={theme === "modern" ? "contained" : "outlined"}
+  onClick={() => applyTheme("modern")}
+>
+  Modern
+</Button>
+<Button
+  size="small"
+  color="inherit"
+  variant={theme === "retro" ? "contained" : "outlined"}
+  onClick={() => applyTheme("retro")}
+>
+  Retro
+</Button>
+
           </Stack>
         </Toolbar>
       </AppBar>
