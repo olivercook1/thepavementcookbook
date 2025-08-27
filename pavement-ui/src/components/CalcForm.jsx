@@ -77,6 +77,23 @@ export default function CalcForm({
     <MenuItem value="FC3">FC3</MenuItem>
     <MenuItem value="FC4">FC4</MenuItem>
   </Select>
+  <FormControl fullWidth>
+  <InputLabel id="mat-label">Asphalt material</InputLabel>
+  <Select
+    labelId="mat-label"
+    id="asphaltMaterial"
+    name="asphaltMaterial"
+    label="Asphalt material"
+    value={form.asphaltMaterial ?? ""}
+    onChange={onChange}
+    onBlur={onBlur}
+  >
+    <MenuItem value="">HBGM path (use Eq 2.24)</MenuItem>
+    <MenuItem value="AC_40_60">Asphalt base – AC 40/60</MenuItem>
+    <MenuItem value="EME2">Asphalt base – EME2</MenuItem>
+  </Select>
+</FormControl>
+
 </FormControl>
 
 

@@ -11,9 +11,10 @@ import { API_BASE, httpText } from "../api/http";
 
 
 export default function DesignCalc() {
-  const [form, setForm] = useState({
+    const [form, setForm] = useState({
     cbr: "", msa: "", designLife: "20", pavementType: "flexible",
-   foundationClass: "FC2",
+    foundationClass: "FC2",
+    asphaltMaterial: "", // "", "AC_40_60", or "EME2"
      fc2Option: "SUBBASE_ONLY_UNBOUND",
    });
 
@@ -74,6 +75,7 @@ export default function DesignCalc() {
         designLife: Number(form.designLife),
         pavementType: form.pavementType,
         foundationClass: form.foundationClass,
+        asphaltMaterial: form.asphaltMaterial || undefined, // omit when blank -> HBGM path
         fc2Option: form.fc2Option,
     
       };
