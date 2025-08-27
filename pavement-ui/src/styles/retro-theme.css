@@ -24,10 +24,22 @@
   font-weight: 700 !important;
 }
 
+/* Make the selected button pop in Retro mode */
 [data-theme="retro"] .MuiButton-contained {
-  background-color: #000 !important;
+  background-color: #33ff66 !important; /* bright green */
+  color: #000 !important;               /* black text for contrast */
   border: 1px solid #33ff66 !important;
 }
+
+/* Ensure text in common MUI components isn’t black on black */
+[data-theme="retro"] .MuiTypography-root,
+[data-theme="retro"] .MuiFormLabel-root,
+[data-theme="retro"] .MuiInputBase-input,
+[data-theme="retro"] .MuiSelect-icon,
+[data-theme="retro"] .MuiTableCell-root {
+  color: #33ff66 !important;
+}
+
 
 /* Cards / papers / containers */
 [data-theme="retro"] .MuiPaper-root,
