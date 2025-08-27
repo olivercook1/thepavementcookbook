@@ -3,6 +3,9 @@ import {
   FormHelperText, FormLabel, RadioGroup, FormControlLabel, Radio, Button
 } from "@mui/material";
 
+import { TextField, MenuItem } from "@mui/material";
+
+
 const TC_OPTIONS = ["2", "3", "4", "5"];
 const TYPES = ["flexible", "composite", "rigid"];
 const FC2_OPTIONS = [
@@ -78,27 +81,29 @@ export default function CalcForm({
     <MenuItem value="FC4">FC4</MenuItem>
   </Select>
 
-<FormControl fullWidth>
-  <InputLabel id="mat-label">Asphalt material</InputLabel>
-  <Select
-    labelId="mat-label"
-    id="asphaltMaterial"
-    name="asphaltMaterial"
-    label="Asphalt material"
-    value={form.asphaltMaterial ?? ""}
-    displayEmpty
-    renderValue={(val) => {
-      if (!val) return "HBGM path (Eq 2.24)";            // show text when value = ""
-      return val === "EME2" ? "Asphalt base – EME2" : "Asphalt base – AC 40/60";
-    }}
-    onChange={onChange}
-    onBlur={onBlur}
-  >
-    <MenuItem value="">HBGM path (Eq 2.24)</MenuItem>
-    <MenuItem value="AC_40_60">Asphalt base – AC 40/60</MenuItem>
-    <MenuItem value="EME2">Asphalt base – EME2</MenuItem>
-  </Select>
-</FormControl>
+<TextField
+  select
+  id="asphaltMaterial"
+  name="asphaltMaterial"
+  label="Asphalt material"
+  value={form.asphaltMaterial ?? ""}
+  onChange={onChange}
+  onBlur={onBlur}
+  fullWidth
+  margin="normal"              // adds vertical spacing so it won’t overlap the field above
+  SelectProps={{
+    displayEmpty: true,
+    renderValue: (val) =>
+      val
+        ? (val === "EME2" ? "Asphalt base – EME2" : "Asphalt base – AC 40/60")
+        : "— Select (default: HBGM Eq 2.24) —",   // neutral placeholder until a choice is made
+  }}
+>
+  <MenuItem value="">HBGM path (Eq 2.24)</MenuItem>
+  <MenuItem value="AC_40_60">Asphalt base – AC 40/60</MenuItem>
+  <MenuItem value="EME2">Asphalt base – EME2</MenuItem>
+</TextField>
+
 
 
 </FormControl>
