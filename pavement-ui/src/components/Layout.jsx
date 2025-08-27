@@ -18,6 +18,11 @@
              <Button component={Link} to="/hints" color="inherit" variant={!isCalc ? "outlined" : "text"}>
                Hints
              </Button>
+
+             <Button onClick={() => document.documentElement.setAttribute("data-theme", "retro")}>
+  Retro
+</Button>
+
               <ThemeToggle />
            </Stack>
          </Toolbar>
