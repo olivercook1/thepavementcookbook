@@ -1,53 +1,51 @@
-/* /styles/retro-theme.css */
-:root[data-theme="retro"] {
-  --retro-bg:#001b2e;
-  --retro-surface:#012a36;
-  --retro-text:#e8ffea;
-  --retro-muted:#86f6c8;
-  --retro-accent:#00f7a4;
+/* Default (modern) can be your normal MUI theme; we only override retro here */
+
+/* Big, obvious switch when retro is on */
+[data-theme="retro"] body {
+  background: #0b0b0b;
+  color: #33ff66;
+  image-rendering: pixelated;
+  letter-spacing: 0.03em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Press Start 2P", monospace;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  :root[data-theme="retro"] * { animation:none!important; transition:none!important; }
+/* App bar + buttons readable in retro mode */
+[data-theme="retro"] .MuiAppBar-root {
+  background-color: #000 !important;
+  color: #33ff66 !important;
+  box-shadow: none !important;
+  border-bottom: 2px solid #33ff66;
 }
 
-:root[data-theme="retro"] body { background:var(--retro-bg); color:var(--retro-text); }
-:root[data-theme="retro"] a { color:var(--retro-accent); }
-
-@font-face{
-  font-family:"PressStart2P";
-  src:local("Press Start 2P"), url("/fonts/press-start-2p.woff2") format("woff2");
-  font-display:swap;
-}
-:root[data-theme="retro"] .use-pixel-font,
-:root[data-theme="retro"] h1,
-:root[data-theme="retro"] h2,
-:root[data-theme="retro"] h3 {
-  font-family:"PressStart2P", ui-monospace, Menlo, Monaco, monospace;
-  letter-spacing:.5px;
+[data-theme="retro"] .MuiButton-root {
+  color: #33ff66 !important;
+  border-color: #33ff66 !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
 }
 
-:root[data-theme="retro"] :where(button,[href],input,select,textarea,[tabindex]):focus-visible{
-  outline:3px solid var(--retro-accent);
-  outline-offset:2px;
+[data-theme="retro"] .MuiButton-contained {
+  background-color: #000 !important;
+  border: 1px solid #33ff66 !important;
 }
 
-/* fixed toggle button */
-.theme-toggle{
-  position:fixed; top:.75rem; right:.75rem; z-index:1000;
-  background: color-mix(in srgb, Canvas, #000 8%);
-  border:1px solid color-mix(in srgb, CanvasText, transparent 75%);
-  border-radius:10px; padding:.5rem .75rem;
-  font:600 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color:inherit;
+/* Cards / papers / containers */
+[data-theme="retro"] .MuiPaper-root,
+[data-theme="retro"] main,
+[data-theme="retro"] .MuiContainer-root {
+  background-color: #111 !important;
+  color: #33ff66 !important;
 }
-.theme-toggle:focus-visible{ outline:3px solid #7c5cff; outline-offset:3px; }
 
-/* fun but subtle scanlines */
-:root[data-theme="retro"] body::after{
-  content:""; position:fixed; inset:0; pointer-events:none;
-  background:
-    linear-gradient(rgba(255,255,255,.04), rgba(0,0,0,.04)) 0 0/100% 3px,
-    radial-gradient(circle at 50% 20%, rgba(255,255,255,.06), transparent 35%);
-  mix-blend-mode:overlay; opacity:.75;
+/* Inputs / table borders */
+[data-theme="retro"] .MuiOutlinedInput-notchedOutline,
+[data-theme="retro"] .MuiTable-root,
+[data-theme="retro"] .MuiTableCell-root {
+  border-color: #33ff66 !important;
+}
+
+/* Links */
+[data-theme="retro"] a {
+  color: #33ff66 !important;
+  text-decoration: underline;
 }
