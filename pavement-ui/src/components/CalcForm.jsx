@@ -61,6 +61,25 @@ export default function CalcForm({
             <FormHelperText>{fieldErrors.pavementType}</FormHelperText>}
         </FormControl>
 
+        <FormControl fullWidth>
+  <InputLabel id="fc-label">Foundation class</InputLabel>
+  <Select
+    labelId="fc-label"
+    id="foundationClass"
+    name="foundationClass"
+    label="Foundation class"
+    value={form.foundationClass}
+    onChange={onChange}
+    onBlur={onBlur}
+  >
+    <MenuItem value="FC1">FC1</MenuItem>
+    <MenuItem value="FC2">FC2</MenuItem>
+    <MenuItem value="FC3">FC3</MenuItem>
+    <MenuItem value="FC4">FC4</MenuItem>
+  </Select>
+</FormControl>
+
+
         <FormControl fullWidth required
           error={!!fieldErrors.fc2Option && (touched.fc2Option || form.fc2Option !== "")}>
           <InputLabel id="fc2-label">Foundation option (fc2Option)</InputLabel>

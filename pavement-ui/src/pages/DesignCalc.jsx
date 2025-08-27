@@ -12,12 +12,10 @@ import { API_BASE, httpText } from "../api/http";
 
 export default function DesignCalc() {
   const [form, setForm] = useState({
-  cbr: "", msa: "", designLife: "20", pavementType: "flexible",
+    cbr: "", msa: "", designLife: "20", pavementType: "flexible",
+   foundationClass: "FC2",
      fc2Option: "SUBBASE_ONLY_UNBOUND",
-  })
-
-
-
+   });
 
   const [touched, setTouched] = useState({});
   const [fieldErrors, setFieldErrors] = useState(validateAll(form));
@@ -62,7 +60,6 @@ export default function DesignCalc() {
 }
 
 
-
   async function onSubmit(e) {
     e.preventDefault();
     setError(""); setResult(null);
@@ -76,8 +73,9 @@ export default function DesignCalc() {
         msa: Number(form.msa),
         designLife: Number(form.designLife),
         pavementType: form.pavementType,
+        foundationClass: form.foundationClass,
         fc2Option: form.fc2Option,
-       
+    
       };
       const data = await calculateDesign(payload);
       setResult(data);

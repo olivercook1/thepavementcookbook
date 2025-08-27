@@ -50,10 +50,17 @@ export function validateField(name, value) {
       return undefined;
     }
 
-    default:
-      return undefined;
-  }
-}
+ 
+   case "foundationClass": {
+     if (!value) return "Required";
+     if (!["FC1","FC2","FC3","FC4"].includes(value)) return "Must be FC1–FC4";
+     return undefined;
+   }
+     default:
+       return undefined;
+   }
+ }
+
 
 export function validateAll(form) {
   return {
@@ -61,6 +68,8 @@ export function validateAll(form) {
     msa: validateField("msa", form.msa),
     designLife: validateField("designLife", form.designLife),
     pavementType: validateField("pavementType", form.pavementType),
+    foundationClass: validateField("foundationClass", form.foundationClass),
     fc2Option: validateField("fc2Option", form.fc2Option),
   };
 }
+
