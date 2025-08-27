@@ -12,9 +12,12 @@ import { API_BASE, httpText } from "../api/http";
 
 export default function DesignCalc() {
   const [form, setForm] = useState({
-    cbr: "", trafficCategory: "", designLife: "20", pavementType: "flexible",
-    fc2Option: "SUBBASE_ONLY_UNBOUND",
-  });
+  cbr: "", msa: "", designLife: "20", pavementType: "flexible",
+     fc2Option: "SUBBASE_ONLY_UNBOUND",
+  })
+
+
+
 
   const [touched, setTouched] = useState({});
   const [fieldErrors, setFieldErrors] = useState(validateAll(form));
@@ -68,12 +71,13 @@ export default function DesignCalc() {
     if (hasErrors) { setError("Please fix the highlighted fields."); return; }
 
     try {
-      const payload = {
+        const payload = {
         cbr: Number(form.cbr),
-        trafficCategory: form.trafficCategory,
+        msa: Number(form.msa),
         designLife: Number(form.designLife),
         pavementType: form.pavementType,
         fc2Option: form.fc2Option,
+       
       };
       const data = await calculateDesign(payload);
       setResult(data);

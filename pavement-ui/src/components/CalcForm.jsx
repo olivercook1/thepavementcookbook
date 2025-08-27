@@ -27,21 +27,20 @@ export default function CalcForm({
           fullWidth
         />
 
-        <FormControl fullWidth required
-          error={!!fieldErrors.trafficCategory && (touched.trafficCategory || form.trafficCategory !== "")}>
-          <InputLabel id="tc-label">Traffic category</InputLabel>
-          <Select
-            labelId="tc-label" id="trafficCategory" name="trafficCategory"
-            label="Traffic category" value={form.trafficCategory}
-            onChange={onChange} onBlur={onBlur}
-          >
-            <MenuItem value="" disabled>Choose…</MenuItem>
-            {TC_OPTIONS.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
-          </Select>
-          <FormHelperText>
-            {(touched.trafficCategory || form.trafficCategory !== "") ? fieldErrors.trafficCategory : "Pick DMRB traffic category."}
-          </FormHelperText>
-        </FormControl>
+       <TextField
+  id="msa"
+  name="msa"
+  label="Traffic (msa)"
+  type="number"
+  inputProps={{ min: 0, step: "0.1" }}
+  value={form.msa}
+  onChange={onChange}
+  onBlur={onBlur}
+  error={!!fieldErrors.msa && (touched.msa || form.msa !== "")}
+  helperText={(touched.msa || form.msa !== "") ? fieldErrors.msa : "Enter msa directly (e.g., 10, 30, 80)"}
+  fullWidth
+/>
+
 
         <TextField
           id="designLife" name="designLife" label="Design life (years)" type="number"

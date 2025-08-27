@@ -1,5 +1,5 @@
 // src/utils/validation.js
-const TC_OPTIONS = ["2", "3", "4", "5"];
+
 const TYPES = ["flexible", "composite", "rigid"];
 const FC2_OPTIONS = [
   "SUBBASE_ONLY_UNBOUND",
@@ -19,10 +19,16 @@ export function validateField(name, value) {
       if (n > 30) return "CBR must be ≤ 30";
       return undefined;
     }
-    case "trafficCategory":
-      if (!value) return "trafficCategory is required";
-      if (!TC_OPTIONS.includes(value)) return "trafficCategory must be 2, 3, 4 or 5";
+
+    case "msa": {
+      if (value === "" || value === null || value === undefined) return "Required";
+      const n = Number(value);
+      if (!Number.isFinite(n)) return "Enter a number";
+      if (n < 0) return "Must be ≥ 0";
+      if (n > 4000) return "Unusually high";
       return undefined;
+    }
+
     case "designLife": {
       const n = Number(value);
       if (!value) return "designLife is required";
@@ -31,14 +37,19 @@ export function validateField(name, value) {
       if (n > 60) return "designLife must be ≤ 60";
       return undefined;
     }
-    case "pavementType":
+
+    case "pavementType": {
       if (!value) return "pavementType is required";
       if (!TYPES.includes(value)) return "pavementType must be flexible, composite, or rigid";
       return undefined;
-    case "fc2Option":
+    }
+
+    case "fc2Option": {
       if (!value) return "fc2Option is required";
       if (!FC2_OPTIONS.includes(value)) return "Invalid fc2Option";
       return undefined;
+    }
+
     default:
       return undefined;
   }
@@ -47,7 +58,7 @@ export function validateField(name, value) {
 export function validateAll(form) {
   return {
     cbr: validateField("cbr", form.cbr),
-    trafficCategory: validateField("trafficCategory", form.trafficCategory),
+    msa: validateField("msa", form.msa),
     designLife: validateField("designLife", form.designLife),
     pavementType: validateField("pavementType", form.pavementType),
     fc2Option: validateField("fc2Option", form.fc2Option),
