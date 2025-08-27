@@ -61,3 +61,10 @@
   color: #33ff66 !important;
   text-decoration: underline;
 }
+
+/* Retro dropdown menu contrast */
+[data-theme="retro"] .MuiMenu-paper,
+[data-theme="retro"] .MuiMenuItem-root {
+  background-color: #000 !important;
+  color: #33ff66 !important;
+}
