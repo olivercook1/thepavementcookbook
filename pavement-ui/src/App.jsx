@@ -5,7 +5,7 @@ import DesignCalc from "./pages/DesignCalc";
 import Hints from "./pages/Hints";
 
 // keep your retro CSS import if you had it here:
-import "../styles/retro-theme.css";
+import "./styles/retro-theme.css";
 
 export default function App() {
   return (
