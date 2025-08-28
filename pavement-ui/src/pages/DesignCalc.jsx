@@ -1,34 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+// pavement-ui/src/pages/DesignCalc.jsx
+import { useMemo, useState } from "react";
 import CalcForm from "../components/CalcForm";
 import ResultCard from "../components/ResultCard";
 import { validateField, validateAll } from "../utils/validation";
-
-function ApiStatusBar() {
-  const API_BASE = import.meta.env.VITE_API_BASE || "";
-  const [status, setStatus] = useState("checking…");
-
-  useEffect(() => {
-    let cancelled = false;
-    const urls = ["/actuator/health", "/api/design/health", "/api/health"]
-      .map((p) => (API_BASE ? `${API_BASE}${p}` : p));
-    (async () => {
-      for (const u of urls) {
-        try {
-          const r = await fetch(u);
-          if (!cancelled && r.ok) { setStatus("OK"); return; }
-        } catch {}
-      }
-      if (!cancelled) setStatus(API_BASE ? "unreachable" : "proxy mode");
-    })();
-    return () => { cancelled = true; };
-  }, []);
-
-  return (
-    <div style={{ fontSize: 12, opacity: 0.75, marginBottom: 12 }}>
-      API: <code>{import.meta.env.VITE_API_BASE || "(same origin proxy)"}</code> — {status}
-    </div>
-  );
-}
 
 export default function DesignCalc() {
   const [form, setForm] = useState({
@@ -37,7 +11,7 @@ export default function DesignCalc() {
     designLife: "20",
     pavementType: "flexible",
     foundationClass: "FC2",
-    asphaltMaterial: "HBGM", // default selected so label never overlaps
+    asphaltMaterial: "HBGM", // default selection so label never overlaps
     fc2Option: "SUBBASE_ONLY_UNBOUND",
   });
 
@@ -66,16 +40,22 @@ export default function DesignCalc() {
     setSubmitError("");
     setResult(null);
 
+    // force validation to show messages
     setTouched((t) => ({
       ...t,
-      cbr: true, msa: true, designLife: true,
-      pavementType: true, foundationClass: true, fc2Option: true,
+      cbr: true,
+      msa: true,
+      designLife: true,
+      pavementType: true,
+      foundationClass: true,
+      fc2Option: true,
     }));
     if (Object.values(errors).some(Boolean)) {
       setFieldErrors(errors);
       return;
     }
 
+    // Build payload; omit asphaltMaterial when HBGM so backend uses Eq 2.24
     const payload = {
       cbr: Number(form.cbr),
       msa: Number(form.msa),
@@ -91,6 +71,7 @@ export default function DesignCalc() {
     const base = import.meta.env.VITE_API_BASE || "";
     const url = base ? `${base}/api/design/calculate` : "/api/design/calculate";
 
+
     try {
       setLoading(true);
       const res = await fetch(url, {
@@ -98,7 +79,10 @@ export default function DesignCalc() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`${res.status} ${res.statusText}${text ? ` – ${text}` : ""}`);
+      }
       const data = await res.json();
       setResult(data);
     } catch (err) {
@@ -110,8 +94,6 @@ export default function DesignCalc() {
 
   return (
     <div className="container">
-      <ApiStatusBar />
-
       <CalcForm
         form={form}
         fieldErrors={fieldErrors}
@@ -123,7 +105,9 @@ export default function DesignCalc() {
       />
 
       {loading && <p>Calculating…</p>}
-      {submitError && <p style={{ color: "red", marginTop: 12 }}>Error: {submitError}</p>}
+      {submitError && (
+        <p style={{ color: "red", marginTop: 12 }}>Error: {submitError}</p>
+      )}
       {result && <ResultCard result={result} />}
     </div>
   );
