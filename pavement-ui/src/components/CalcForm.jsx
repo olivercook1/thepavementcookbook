@@ -143,25 +143,24 @@ export default function CalcForm({
           )}
         </FormControl>
 
-        {/* Asphalt material (label forced to stay above; neutral placeholder until chosen) */}
+        {/* Asphalt material (label stays above; real HBGM option; separate placeholder) */}
         <FormControl fullWidth sx={{ mt: 1 }}>
-          <InputLabel id="mat-label" shrink>Asphalt material</InputLabel>
+          <InputLabel id="mat-label" shrink>
+            Asphalt material
+          </InputLabel>
           <Select
             labelId="mat-label"
             id="asphaltMaterial"
             name="asphaltMaterial"
             label="Asphalt material"
-            value={form.asphaltMaterial ?? ""}
+            value={form.asphaltMaterial ?? ""}   // "" = placeholder only
             onChange={onChange}
             onBlur={onBlur}
-            displayEmpty
-            renderValue={(val) =>
-              val
-                ? (val === "EME2" ? "Asphalt base – EME2" : "Asphalt base – AC 40/60")
-                : "— Select asphalt material —"
-            }
           >
-            <MenuItem value="">HBGM path (Eq 2.24)</MenuItem>
+            <MenuItem value="" disabled>
+              — Select asphalt material —
+            </MenuItem>
+            <MenuItem value="HBGM">HBGM path (Eq 2.24)</MenuItem>
             <MenuItem value="AC_40_60">Asphalt base – AC 40/60</MenuItem>
             <MenuItem value="EME2">Asphalt base – EME2</MenuItem>
           </Select>

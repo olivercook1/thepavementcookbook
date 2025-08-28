@@ -1,125 +1,121 @@
-import { useState } from "react";
-import { Typography, Stack, Button, Card, CardContent, Alert } from "@mui/material";
+// pavement-ui/src/pages/DesignCalc.jsx
+import { useMemo, useState } from "react";
 import CalcForm from "../components/CalcForm";
 import ResultCard from "../components/ResultCard";
-
-import { getHints, calculateDesign } from "../api/designService";
 import { validateField, validateAll } from "../utils/validation";
-import { normalizeLayers } from "../utils/layers";
-
-import { API_BASE, httpText } from "../api/http";
-
 
 export default function DesignCalc() {
-    const [form, setForm] = useState({
-    cbr: "", msa: "", designLife: "20", pavementType: "flexible",
+  const [form, setForm] = useState({
+    cbr: "",
+    msa: "",
+    designLife: "20",
+    pavementType: "flexible",
     foundationClass: "FC2",
-    asphaltMaterial: "", // "", "AC_40_60", or "EME2"
-     fc2Option: "SUBBASE_ONLY_UNBOUND",
-   });
+    asphaltMaterial: "", // "", "HBGM", "AC_40_60", "EME2"
+    fc2Option: "SUBBASE_ONLY_UNBOUND",
+  });
 
   const [touched, setTouched] = useState({});
-  const [fieldErrors, setFieldErrors] = useState(validateAll(form));
-  const [health, setHealth] = useState("unknown");
-  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [submitError, setSubmitError] = useState("");
 
-  function onChange(e) {
+  // derive current validation state
+  const errors = useMemo(() => validateAll(form), [form]);
+  const hasErrors = useMemo(
+    () => Object.values(errors).some((e) => !!e),
+    [errors]
+  );
+
+  const onChange = (e) => {
     const { name, value } = e.target;
-    setForm(f => {
-      const next = { ...f, [name]: value };
-      setFieldErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
-      return next;
-    });
-  }
-  function onBlur(e) {
-    const { name } = e.target;
-    setTouched(t => ({ ...t, [name]: true }));
-  }
+    setForm((f) => ({ ...f, [name]: value }));
+  };
 
-  const allErrors = validateAll(form);
-  const hasErrors = Object.values(allErrors).some(Boolean);
+  const onBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((t) => ({ ...t, [name]: true }));
+    // field-level validation feedback
+    const err = validateField(name, value);
+    setFieldErrors((fe) => ({ ...fe, [name]: err }));
+  };
 
-
- async function pingApi() {
-  // Try both common health paths and show exact status/text
-  const paths = ["/api/health", "/health"];
-  for (const p of paths) {
-    try {
-      const res = await fetch(`${API_BASE}${p}`);
-      const body = await res.text().catch(() => "");
-      if (res.ok) {
-        setHealth(body || "OK");
-        return;
-      }
-      console.error(`Health ${p}: HTTP ${res.status} ${res.statusText}`, body);
-    } catch (e) {
-      console.error(`Health ${p} network error:`, e);
-    }
-  }
-  setHealth("error");
-}
-
-
-  async function onSubmit(e) {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setError(""); setResult(null);
-    setFieldErrors(allErrors);
-    setTouched({ cbr: true, trafficCategory: true, designLife: true, pavementType: true, fc2Option: true });
-    if (hasErrors) { setError("Please fix the highlighted fields."); return; }
+    setSubmitError("");
+    setResult(null);
+
+    // final validation pass
+    setTouched((t) => ({
+      ...t,
+      cbr: true,
+      msa: true,
+      designLife: true,
+      pavementType: true,
+      foundationClass: true,
+      fc2Option: true,
+    }));
+    if (Object.values(errors).some(Boolean)) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    // build payload
+    const payload = {
+      cbr: Number(form.cbr),
+      msa: Number(form.msa),
+      designLife: Number(form.designLife),
+      pavementType: form.pavementType,
+      foundationClass: form.foundationClass,
+      // omit asphaltMaterial for HBGM to trigger Eq 2.24 on backend
+      ...(form.asphaltMaterial && form.asphaltMaterial !== "HBGM"
+        ? { asphaltMaterial: form.asphaltMaterial }
+        : {}),
+      fc2Option: form.fc2Option,
+    };
+
+    // POST to API (use VITE_API_BASE if provided)
+    const base = import.meta.env.VITE_API_BASE || "";
+    const url = base ? `${base}/api/design/calculate` : "/api/design/calculate";
 
     try {
-        const payload = {
-        cbr: Number(form.cbr),
-        msa: Number(form.msa),
-        designLife: Number(form.designLife),
-        pavementType: form.pavementType,
-        foundationClass: form.foundationClass,
-        asphaltMaterial: form.asphaltMaterial || undefined, // omit when blank -> HBGM path
-        fc2Option: form.fc2Option,
-    
-      };
-      const data = await calculateDesign(payload);
+      setLoading(true);
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`${res.status} ${res.statusText} — ${text}`);
+      }
+      const data = await res.json();
       setResult(data);
     } catch (err) {
-      console.error(err);
-      setError("Could not calculate (check API and CORS).");
+      setSubmitError(err.message || "Request failed");
+    } finally {
+      setLoading(false);
     }
-  }
-
-  const layers = normalizeLayers(result);
-  const totalDisplay = result?.totalThickness ?? (layers.length ? layers.reduce((s, l) => s + (l.thickness || 0), 0) : null);
+  };
 
   return (
-    <>
-      {/* Health / Check API */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
-            <Typography><strong>Backend status:</strong> {health}</Typography>
-            <Button variant="outlined" onClick={pingApi}>Check API</Button>
-          </Stack>
-          <Typography variant="caption" sx={{ mt: 1, display: "block", opacity: 0.75 }}>
-            Using API base: <code>{API_BASE}</code>
-          </Typography>
-        </CardContent>
-      </Card>
-
-      <Typography variant="h6" sx={{ mb: 2 }}>DMRB Input</Typography>
-
+    <div className="container">
       <CalcForm
         form={form}
         fieldErrors={fieldErrors}
         touched={touched}
-        hasErrors={hasErrors}
+        hasErrors={hasErrors || loading}
         onChange={onChange}
         onBlur={onBlur}
         onSubmit={onSubmit}
       />
 
-      {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-
-      <ResultCard result={result} layers={layers} totalDisplay={totalDisplay} />
-    </>
+      {loading && <p>Calculating…</p>}
+      {submitError && (
+        <p style={{ color: "red", marginTop: 12 }}>Error: {submitError}</p>
+      )}
+      {result && <ResultCard result={result} />}
+    </div>
   );
 }
