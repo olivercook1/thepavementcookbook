@@ -143,23 +143,18 @@ export default function CalcForm({
           )}
         </FormControl>
 
-        {/* Asphalt material (label stays above; real HBGM option; separate placeholder) */}
-        <FormControl fullWidth sx={{ mt: 1 }}>
-          <InputLabel id="mat-label" shrink>
-            Asphalt material
-          </InputLabel>
+        {/* Asphalt material (same pattern as other selects; default set in DesignCalc) */}
+        <FormControl fullWidth>
+          <InputLabel id="mat-label">Asphalt material</InputLabel>
           <Select
             labelId="mat-label"
             id="asphaltMaterial"
             name="asphaltMaterial"
             label="Asphalt material"
-            value={form.asphaltMaterial ?? ""}   // "" = placeholder only
+            value={form.asphaltMaterial}
             onChange={onChange}
             onBlur={onBlur}
           >
-            <MenuItem value="" disabled>
-              — Select asphalt material —
-            </MenuItem>
             <MenuItem value="HBGM">HBGM path (Eq 2.24)</MenuItem>
             <MenuItem value="AC_40_60">Asphalt base – AC 40/60</MenuItem>
             <MenuItem value="EME2">Asphalt base – EME2</MenuItem>
@@ -191,7 +186,8 @@ export default function CalcForm({
           <FormHelperText>
             {(touched.fc2Option || form.fc2Option !== "")
               ? fieldErrors.fc2Option
-              : "Choose foundation configuration."}
+              : "Choose foundation configuration."
+            }
           </FormHelperText>
         </FormControl>
 
