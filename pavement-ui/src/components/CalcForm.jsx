@@ -191,9 +191,10 @@ export default function CalcForm({
           </FormHelperText>
         </FormControl>
 
-        <Button type="submit" variant="contained" disabled={hasErrors}>
-          Calculate
-        </Button>
+        <Button type="submit" variant="contained">
+  Calculate
+</Button>
+
       </Stack>
     </Box>
   );

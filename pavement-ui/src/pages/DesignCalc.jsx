@@ -52,21 +52,21 @@ export default function DesignCalc() {
     }));
     if (Object.values(errors).some(Boolean)) {
       setFieldErrors(errors);
-      return;
-    }
+   }
 
     // Build payload; omit asphaltMaterial when HBGM so backend uses Eq 2.24
     const payload = {
-      cbr: Number(form.cbr),
-      msa: Number(form.msa),
-      designLife: Number(form.designLife),
-      pavementType: form.pavementType,
-      foundationClass: form.foundationClass,
-      ...(form.asphaltMaterial && form.asphaltMaterial !== "HBGM"
-        ? { asphaltMaterial: form.asphaltMaterial }
-        : {}),
-      fc2Option: form.fc2Option,
-    };
+  cbr: Number(form.cbr),
+  msa: Number(form.msa),
+  designLife: Number(form.designLife),
+  pavementType: form.pavementType,
+  foundationClass: form.foundationClass,
+  ...(form.asphaltMaterial && form.asphaltMaterial !== "HBGM"
+    ? { asphaltMaterial: form.asphaltMaterial }
+    : {}),
+  fc2Option: form.fc2Option,
+};
+
 
     const base = import.meta.env.VITE_API_BASE || "";
     const url = base ? `${base}/api/design/calculate` : "/api/design/calculate";
