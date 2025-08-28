@@ -143,32 +143,29 @@ export default function CalcForm({
           )}
         </FormControl>
 
-        {/* Asphalt material (separate field; shows neutral placeholder until selected) */}
-        <TextField
-          select
-          id="asphaltMaterial"
-          name="asphaltMaterial"
-          label="Asphalt material"
-          value={form.asphaltMaterial ?? ""}
-          onChange={onChange}
-          onBlur={onBlur}
-          fullWidth
-          margin="normal" /* adds spacing so it won’t crowd the field above */
-          SelectProps={{
-            displayEmpty: true,
-            renderValue: (val) =>
-              val
-                ? val === "EME2"
-                  ? "Asphalt base – EME2"
-                  : "Asphalt base – AC 40/60"
-                : "— Select (default: HBGM Eq 2.24) —",
-          }}
-        >
-          <MenuItem value="">HBGM path (Eq 2.24)</MenuItem>
-          <MenuItem value="AC_40_60">Asphalt base – AC 40/60</MenuItem>
-          <MenuItem value="EME2">Asphalt base – EME2</MenuItem>
-        </TextField>
-
+        <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="mat-label">Asphalt material</InputLabel>
+            <Select
+                labelId="mat-label"
+                id="asphaltMaterial"
+                name="asphaltMaterial"
+                label="Asphalt material"
+                value={form.asphaltMaterial ?? ""}
+                onChange={onChange}
+                onBlur={onBlur}
+                displayEmpty
+                renderValue={(val) =>
+                val
+                ? (val === "EME2" ? "Asphalt base – EME2" : "Asphalt base – AC 40/60")
+                : "— Select (default: HBGM Eq 2.24) —"
+                }
+                >
+            <MenuItem value="">HBGM path (Eq 2.24)</MenuItem>
+            <MenuItem value="AC_40_60">Asphalt base – AC 40/60</MenuItem>
+            <MenuItem value="EME2">Asphalt base – EME2</MenuItem>
+            </Select>
+        </FormControl>
+        
         {/* Foundation option (cd225) */}
         <FormControl
           fullWidth
