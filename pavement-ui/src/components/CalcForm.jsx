@@ -1,3 +1,4 @@
+// pavement-ui/src/components/CalcForm.jsx
 import {
   Box,
   Stack,
@@ -36,6 +37,7 @@ export default function CalcForm({
   return (
     <Box component="form" noValidate onSubmit={onSubmit}>
       <Stack spacing={2}>
+        {/* CBR */}
         <TextField
           id="cbr"
           name="cbr"
@@ -51,20 +53,27 @@ export default function CalcForm({
           fullWidth
         />
 
+        {/* MSA (required so the button doesn't feel dead if blank) */}
         <TextField
           id="msa"
           name="msa"
           label="Traffic (msa)"
           type="number"
           inputProps={{ min: 0, step: 0.1 }}
+          required
           value={form.msa}
           onChange={onChange}
           onBlur={onBlur}
           error={!!fieldErrors.msa && (touched.msa || form.msa !== "")}
-          helperText={(touched.msa || form.msa !== "") ? fieldErrors.msa : "Enter msa directly (e.g., 10, 30, 80)"}
+          helperText={
+            (touched.msa || form.msa !== "")
+              ? fieldErrors.msa
+              : "Enter msa directly (e.g., 10, 30, 80)"
+          }
           fullWidth
         />
 
+        {/* Design life */}
         <TextField
           id="designLife"
           name="designLife"
@@ -80,6 +89,7 @@ export default function CalcForm({
           fullWidth
         />
 
+        {/* Pavement type */}
         <FormControl
           component="fieldset"
           error={!!fieldErrors.pavementType && (touched.pavementType || form.pavementType !== "")}
@@ -100,14 +110,19 @@ export default function CalcForm({
               />
             ))}
           </RadioGroup>
-          {!!fieldErrors.pavementType && (touched.pavementType || form.pavementType !== "") && (
-            <FormHelperText>{fieldErrors.pavementType}</FormHelperText>
-          )}
+          {!!fieldErrors.pavementType &&
+            (touched.pavementType || form.pavementType !== "") && (
+              <FormHelperText>{fieldErrors.pavementType}</FormHelperText>
+            )}
         </FormControl>
 
+        {/* Foundation class */}
         <FormControl
           fullWidth
-          error={!!fieldErrors.foundationClass && (touched.foundationClass || form.foundationClass !== "")}
+          error={
+            !!fieldErrors.foundationClass &&
+            (touched.foundationClass || form.foundationClass !== "")
+          }
         >
           <InputLabel id="fc-label">Foundation class</InputLabel>
           <Select
@@ -129,7 +144,7 @@ export default function CalcForm({
           )}
         </FormControl>
 
-        {/* Asphalt material — identical pattern to other selects. Default comes from DesignCalc. */}
+        {/* Asphalt material — identical pattern to other selects; default set in DesignCalc */}
         <FormControl fullWidth>
           <InputLabel id="mat-label">Asphalt material</InputLabel>
           <Select
@@ -147,6 +162,7 @@ export default function CalcForm({
           </Select>
         </FormControl>
 
+        {/* Foundation option (cd225) */}
         <FormControl
           fullWidth
           required
@@ -163,15 +179,21 @@ export default function CalcForm({
             onBlur={onBlur}
           >
             {FC2_OPTIONS.map((o) => (
-              <MenuItem key={o} value={o}>{o}</MenuItem>
+              <MenuItem key={o} value={o}>
+                {o}
+              </MenuItem>
             ))}
           </Select>
           <FormHelperText>
-            {(touched.fc2Option || form.fc2Option !== "") ? fieldErrors.fc2Option : "Choose foundation configuration."}
+            {(touched.fc2Option || form.fc2Option !== "")
+              ? fieldErrors.fc2Option
+              : "Choose foundation configuration."}
           </FormHelperText>
         </FormControl>
 
-        <Button type="submit" variant="contained" disabled={hasErrors}>Calculate</Button>
+        <Button type="submit" variant="contained" disabled={hasErrors}>
+          Calculate
+        </Button>
       </Stack>
     </Box>
   );
