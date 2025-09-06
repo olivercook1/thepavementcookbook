@@ -4,6 +4,10 @@ import CalcForm from "../components/CalcForm";
 import ResultCard from "../components/ResultCard";
 import { validateField, validateAll } from "../utils/validation";
 
+//
+import { normalizeLayers } from "../utils/layers";
+
+
 export default function DesignCalc() {
   const [form, setForm] = useState({
     cbr: "",
@@ -108,7 +112,19 @@ export default function DesignCalc() {
       {submitError && (
         <p style={{ color: "red", marginTop: 12 }}>Error: {submitError}</p>
       )}
-      {result && <ResultCard result={result} />}
+      //
+     {result && (
+  <ResultCard
+    result={result}
+    layers={normalizeLayers(result)}
+    totalDisplay={result?.totalConstructionThicknessMm}
+  />
+)}
+
+
+
+
+
     </div>
   );
 }
